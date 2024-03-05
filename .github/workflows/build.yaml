@@ -19,5 +19,7 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
+      - name: Allow build.sh
+        run: chmod +x ./build.sh
       - name: Build with Maven
         run: ./build.sh
