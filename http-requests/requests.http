@@ -1,0 +1,12 @@
+GET http://localhost:8080/api/vehicle
+Content-Type: */*
+
+###
+
+POST http://localhost:8080/api/vehicle
+Content-Type: application/json
+
+{
+  "brand": "nissan",
+  "model": "micra"
+}
