@@ -1,6 +1,11 @@
 name: Build and Deploy Dockerfiles
 run-name: ${{ github.actor }} is building Docker images 🚀
 on: [push]
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+
 jobs:
   build-images:
     permissions: write-all
@@ -12,6 +17,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Check out repository code
         uses: actions/checkout@v4
       - uses: actions/setup-java@v4
@@ -19,7 +25,26 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
           cache: 'maven'
-      - name: Allow build.sh
-        run: chmod +x ./build.sh
-      - name: Build with Maven
-        run: ./build.sh
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: src/main/docker/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ env.REGISTRY }}/${{ github.repository }}:latest
+
+      #- name: Build with Maven
+      #  run: |
+      #    chmod +x ./build.sh
+      #    ./build.sh
