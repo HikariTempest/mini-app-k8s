@@ -7,9 +7,9 @@ services:
     image: postgres:15.2-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_USER: app
-      POSTGRES_PASSWORD: app
-      POSTGRES_DB: db
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo
     ports:
       - 5432:5432
     volumes:
